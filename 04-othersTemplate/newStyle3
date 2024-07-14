@@ -1,0 +1,67 @@
+ans 3 
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define ll long long
+#define _test int _TEST; cin >> _TEST; while(_TEST--)
+#define ff first
+#define ss second
+#define pb push_back
+#define ppb pop_back
+
+const int MAX_SIZE = 200005;
+ll values[] = {1, 10, 100, 1000, 10000};
+ll dp[MAX_SIZE][7][2]; // DP array for memoization
+ll str_length;
+string input_string;
+
+// Recursive function to solve the problem
+ll solve(int index, int max_char, int is_changed) {
+    // Base case: if the index is out of bounds
+    if (index == -1) return 0;
+    
+    // Check if the result is already computed
+    if (dp[index][max_char][is_changed] != -1) return dp[index][max_char][is_changed];
+    
+    int sign = 1;
+    if (input_string[index] - 'A' < max_char) sign = -1;
+    
+    // Calculate the result without changing the current character
+    ll result = sign * values[input_string[index] - 'A'] + solve(index - 1, max(max_char, int(input_string[index] - 'A')), is_changed);
+    
+    // If the character is not changed yet, try changing it to every possible value
+    if (!is_changed) {
+        for (int i = 0; i < 5; i++) {
+            if (i != input_string[index] - 'A') {
+                sign = 1;
+                if (i < max_char) sign = -1;
+                result = max(result, sign * values[i] + solve(index - 1, max(max_char, i), 1));
+            }
+        }
+    }
+    
+    // Memoize the result and return
+    return dp[index][max_char][is_changed] = result;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    _test {
+        cin >> input_string;
+        str_length = input_string.size();
+        
+        // Initialize DP array with -1 (uncomputed state)
+        memset(dp, -1, sizeof(dp[0]) * (str_length + 2));
+        
+        // Get the answer by solving the problem for the given string
+        ll answer = solve(str_length - 1, 0, 0);
+        
+        // Print the result
+        cout << answer << "\n";
+    }
+}

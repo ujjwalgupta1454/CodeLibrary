@@ -1,0 +1,71 @@
+ans 2 working 
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+#include <cstring>
+
+#define MAX_WORD_LENGTH 1000
+
+// Function to check if a word is palindromic
+bool isPalindrome(const std::string &word) {
+    int len = word.size();
+    for (int i = 0; i < len / 2; ++i) {
+        if (word[i] != word[len - i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Function to reverse a word
+std::string reverseWord(const std::string &word) {
+    return std::string(word.rbegin(), word.rend());
+}
+
+// Function to get the maximum concatenated palindrome length
+int maxConcatenatedPalindromeLength(const std::vector<std::string> &words) {
+    int totalLength = 0;
+    int maxPalindromicWordLength = 0;
+    std::unordered_map<std::string, int> wordCountMap;
+
+    // Count the occurrences of each word
+    for (const auto &word : words) {
+        wordCountMap[word]++;
+    }
+
+    // Iterate through each word and its count in the map
+    for (auto it = wordCountMap.begin(); it != wordCountMap.end(); ++it) {
+        std::string word = it->first;
+        int count = it->second;
+        std::string revWord = reverseWord(word);
+
+        if (word == revWord) {  // Check if the word is palindromic
+            if (count % 2 == 0) {
+                totalLength += count * word.size();
+            } else {
+                totalLength += (count - 1) * word.size();
+                maxPalindromicWordLength = std::max(maxPalindromicWordLength, static_cast<int>(word.size()));
+            }
+        } else if (wordCountMap.find(revWord) != wordCountMap.end()) {  // Check for reverse counterpart
+            int pairCount = std::min(count, wordCountMap[revWord]);
+            totalLength += pairCount * (word.size() + revWord.size());
+            wordCountMap[revWord] -= pairCount;
+        }
+    }
+
+    if (maxPalindromicWordLength > 0) {
+        totalLength += maxPalindromicWordLength;
+    }
+
+    return totalLength;
+}
+
+int main() {
+    std::vector<std::string> words = {"ab", "ba", "xyx", "de"};
+    int result = maxConcatenatedPalindromeLength(words);
+    std::cout << "Max Concatenated Palindrome Length: " << result << std::endl;  // Expected output: 7
+
+    return 0;
+}

@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int getMaxNumber(string s) {
+    vector<int> values;
+    for (char c : s) {
+        if (c == 'A') values.push_back(1);
+        if (c == 'B') values.push_back(10);
+        if (c == 'C') values.push_back(100);
+        if (c == 'D') values.push_back(1000);
+        if (c == 'E') values.push_back(10000);
+    }
+    
+    int max_value = INT_MIN, current_value = 0;
+    for (int i = 0; i < values.size(); ++i) {
+        int original = values[i];
+        for (int change : {1, 10, 100, 1000, 10000}) {
+            values[i] = change;
+            current_value = 0;
+            for (int j = 0; j < values.size(); ++j) {
+                bool positive = true;
+                for (int k = j + 1; k < values.size(); ++k) {
+                    if (values[k] > values[j]) {
+                        positive = false;
+                        break;
+                    }
+                }
+                current_value += positive ? values[j] : -values[j];
+            }
+            max_value = max(max_value, current_value);
+        }
+        values[i] = original;
+    }
+    
+    return max_value;
+}
+
+int main() {
+    string s = "AAAA";
+    cout << getMaxNumber(s) << endl;
+    return 0;
+}

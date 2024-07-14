@@ -1,0 +1,188 @@
+class Solution {
+public:
+    int mod = 1e9 + 7;
+    int solve(int i,string &s,char fr,char sec,int len, vector<vector<vector<vector<int>>>> &dp){
+        if(len == 5) return 1;
+        if(i == s.size()) return 0;
+        if(dp[fr-'0'][sec - '0'][len][i] != -1) return dp[fr-'0'][sec - '0'][len][i];
+        
+        long long op1 = 0, op2 = 0, op3 = 0, op4 = 0,op5 = 0;
+        if(len == 0) op1 = solve(i+1,s,s[i],sec,len+1,dp);
+        if(len == 1) op2 = solve(i+1,s,fr,s[i],len+1,dp);
+        if(len == 2) op3 = solve(i+1,s,fr,sec,len+1,dp);
+        if(len == 3 and s[i] == sec) op4 = solve(i+1,s,fr,sec,len+1,dp);
+        if(len == 4 and s[i] == fr) op5 = solve(i+1,s,fr,sec,len+1,dp);
+        long long op6 = solve(i+1,s,fr,sec,len,dp);
+        
+        return dp[fr-'0'][sec - '0'][len][i] = (op1 + op2 + op3 + op4 + op5 + op6) % mod;
+    }
+    int countPalindromes(string s) {
+        vector<vector<vector<vector<int>>>> dp(10, vector<vector<vector<int>>> (10, vector<vector<int>> (5,vector<int>(s.size(),-1))));
+        return solve(0,s,'1','1',0,dp);
+    }
+};
+
+
+
+
+
+ans 2 
+#include <bits/stdc++.h>
+using namespace std;
+ 
+#define ll     long long
+#define _test   int _TEST; cin>>_TEST; while(_TEST--)
+#define ff     first
+#define ss     second
+#define pb     push_back
+#define ppb    pop_back
+ 
+const int mxn = 200005;
+ll val[]={1,10,100,1000,10000};
+ll dp[mxn][7][2], n;
+string s;
+ 
+ll solve(int in, int mx, int changed){
+    if(in==-1) return 0;
+    if(dp[in][mx][changed]!=-1) return dp[in][mx][changed];
+    int sign=1;
+    if(s[in]-'A'<mx) sign=-1;
+    ll res=sign*val[s[in]-'A']+solve(in-1,max(mx,int(s[in]-'A')),changed);
+    if(!changed){
+        for(int i=0; i<5; i++){
+            if(i!=s[in]-'A'){
+                sign=1;
+                if(i<mx) sign=-1;
+                res=max(res,sign*val[i]+solve(in-1,max(mx,i),1));
+            }
+        }
+    }
+    return dp[in][mx][changed]=res;
+}
+ 
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+ 
+    _test
+    {
+        cin>>s;
+        n=s.size();
+        memset(dp, -1, sizeof(dp[0]) * (n+2));
+        ll ans=solve(n-1,0,0);
+        cout<<ans<<"\n";
+    }
+}
+
+
+
+
+ans 3 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <assert.h>
+
+#define MAX_WORD_LENGTH 1000
+
+// Function to check if a word is palindromic
+bool is_palindrome(char *word) {
+    int len = strlen(word);
+    for (int i = 0; i < len / 2; i++) {
+        if (word[i] != word[len - i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Function to reverse a word
+void reverse_word(char *word, char *rev_word) {
+    int len = strlen(word);
+    for (int i = 0; i < len; i++) {
+        rev_word[i] = word[len - i - 1];
+    }
+    rev_word[len] = '\0';
+}
+
+// Function to get the maximum concatenated palindrome length
+int maxConcatenatedPalindrome(int words_count, char **words) {
+    int length = 0;
+    int max_palindromic_word_length = 0;
+
+    // Use a hash map to count occurrences of each word
+    // and to quickly find their reverse counterparts
+    typedef struct {
+        char word[MAX_WORD_LENGTH + 1];
+        int count;
+    } WordCount;
+
+    WordCount *word_map = malloc(words_count * sizeof(WordCount));
+    int map_size = 0;
+
+    for (int i = 0; i < words_count; i++) {
+        bool found = false;
+        for (int j = 0; j < map_size; j++) {
+            if (strcmp(word_map[j].word, words[i]) == 0) {
+                word_map[j].count++;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            strcpy(word_map[map_size].word, words[i]);
+            word_map[map_size].count = 1;
+            map_size++;
+        }
+    }
+
+    // Iterate through each word and its count in the hash map
+    for (int i = 0; i < map_size; i++) {
+        char rev_word[MAX_WORD_LENGTH + 1];
+        reverse_word(word_map[i].word, rev_word);
+
+        if (strcmp(word_map[i].word, rev_word) == 0) {
+            // It's a palindromic word
+            if (word_map[i].count % 2 == 0) {
+                length += word_map[i].count * strlen(word_map[i].word);
+            } else {
+                length += (word_map[i].count - 1) * strlen(word_map[i].word);
+                max_palindromic_word_length = 
+                    max_palindromic_word_length < strlen(word_map[i].word) ? 
+                    strlen(word_map[i].word) : max_palindromic_word_length;
+            }
+        } else {
+            // Find the reverse word in the hash map
+            for (int j = i + 1; j < map_size; j++) {
+                if (strcmp(word_map[j].word, rev_word) == 0) {
+                    int pair_count = word_map[i].count < word_map[j].count ? 
+                                     word_map[i].count : word_map[j].count;
+                    length += pair_count * (strlen(word_map[i].word) + strlen(rev_word));
+                    word_map[j].count -= pair_count;
+                    word_map[i].count -= pair_count;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (max_palindromic_word_length > 0) {
+        length += max_palindromic_word_length;
+    }
+
+    free(word_map);
+    return length;
+}
+
+int main() {
+    char *words[] = {"ab", "ba", "xyx", "de"};
+    int words_count = sizeof(words) / sizeof(words[0]);
+    
+    int result = maxConcatenatedPalindrome(words_count, words);
+    printf("Max Concatenated Palindrome Length: %d\n", result); // Expected output: 7
+    
+    return 0;
+}

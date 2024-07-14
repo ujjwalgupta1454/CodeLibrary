@@ -1,0 +1,76 @@
+i think wrong .
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+int maxConcatenatedPalindrome(vector<string>& words) {
+    unordered_map<string, int> freq;
+    for (const string& word : words) freq[word]++;
+    
+    int len = 0, oddLen = 0;
+    for (const auto& p : freq) {
+        string rev = p.first;
+        reverse(rev.begin(), rev.end());
+        if (p.first == rev) {
+            len += (p.second / 2) * 2 * rev.size();
+            if (p.second % 2) oddLen = max(oddLen, (int)rev.size());
+        } else if (freq.count(rev)) {
+            len += min(p.second, freq[rev]) * rev.size();
+            freq[rev] = 0;
+        }
+    }
+    
+    return len + oddLen;
+}
+
+int main() {
+    vector<string> words = {"ab", "ba", "xyx", "de"};
+    cout << maxConcatenatedPalindrome(words) << endl;
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+int maxConcatenatedPalindrome(vector<string>& words) {
+    unordered_map<string, int> freq;
+    for (const string& word : words) freq[word]++;
+    
+    int len = 0;
+    bool hasOddCenter = false;
+    
+    for (auto& p : freq) {
+        string rev = p.first;
+        reverse(rev.begin(), rev.end());
+        
+        if (p.first == rev) {
+            // For palindromic words, we can use pairs and maybe one in the center
+            len += (p.second / 2) * 2 * rev.size();
+            if (p.second % 2 == 1) hasOddCenter = true;
+        } else if (freq.count(rev)) {
+            // For non-palindromic words, pair them with their reverse
+            int pairs = min(p.second, freq[rev]);
+            len += pairs * rev.size();
+            freq[rev] = 0;  // Avoid counting the reverse pair again
+        }
+    }
+    
+    // Add the length of the central palindrome word if any
+    if (hasOddCenter) len += words[0].size();
+    
+    return len;
+}
+
+int main() {
+    vector<string> words = {"ab", "ba", "xyx", "de"};
+    cout << maxConcatenatedPalindrome(words) << endl;
+    return 0;
+}
