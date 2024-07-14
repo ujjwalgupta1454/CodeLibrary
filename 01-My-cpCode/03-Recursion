@@ -1,0 +1,62 @@
+0) 78. Subsets  ( return all possible subsets (the power set). ) len =10
+1) generating all subsequences of an array len = 12.
+2) permutation len=6 and unique element
+
+0) 78. Subsets  ( return all possible subsets (the power set). ) len =10
+https://leetcode.com/problems/subsets/
+class Solution {
+public:
+    vector<vector<int>> fun(vector<int>& a,int idx) {
+        if(idx!=a.size())
+        {
+            vector<vector<int>> ans=fun(a,idx+1);
+            int n=ans.size();
+            for(int j=0;j<n;j++)
+            {
+                vector<int> temp=ans[j];
+                temp.push_back(a[idx]);
+                ans.push_back(temp);
+            }
+            return ans;
+        }
+        return {{}};
+    }
+    vector<vector<int>> subsets(vector<int>& a) {
+        vector<vector<int>> ans=fun(a,0);
+        return ans;
+    }
+};
+
+
+1) generating all subsequences of an array len = 12.
+Sum of All Subset XOR Totals
+https://leetcode.com/problems/sum-of-all-subset-xor-totals/description/
+
+2) permutation len=6 and unique element
+https://leetcode.com/problems/permutations/
+class Solution {
+public:
+    void rec(vector<int>& a,vector<vector<int>>& ans,vector<int>& curr,set<int> stt) {
+        set<int> temp=stt;
+        if(stt.size())
+            for(auto &x:stt)
+            {
+                curr.push_back(x);
+                temp.erase(x);
+                rec(a,ans,curr,temp);
+                temp.insert(x);
+                curr.pop_back();
+            }
+        else
+            ans.push_back(curr);
+    }
+    vector<vector<int>> permute(vector<int>& a) {
+        vector<vector<int>> ans;
+        set<int> stt(a.begin(),a.end());
+        vector<int> curr;
+        rec(a,ans,curr,stt);
+        return ans;
+    }
+};
+
+3) 
