@@ -1,0 +1,166 @@
+/*
+//  Codes from GFG { Gfg videos }
+1) Adjacency List Representation Representation for a UnDirected Graph (Line10) 
+2) BFS First Version -> given an undirected graph and a source vertex 's' 
+    print BFS from the given source (Line 38).
+3) BFS Second Version-> No Source Given and graph may be disconnected (Line 64)
+4) DFS Version1-> print DFS of a undirected connected graph
+     starting from the given source s (Line 98)
+5) DFS Version2-> print DFS of whole undirected graph ( may be disconnected) (Line113)
+6) Topological Sorting (BFS Based Solution )
+7) Topological Sorting (DFS Based Solution )
+8) Prims algorithm MST L19 (not optimise and not verified) (Line 72)
+
+*/
+
+
+/* 
+1) Adjacency List Representation Representation for a UnDirected Graph (Line10)
+// here array of vector but if you want to add vertices in runtime ....
+
+void addEdge(vector<int> adj[],int u,int v) {
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+}
+
+int main() {
+    int V=4;
+    vector<int> adj[V];
+    addEdge(adj,0,1); // Add edges between vertices
+    addEdge(adj,0,2);
+
+    // Print the adjacency list representation of the graph
+    for(int i=0;i<V;i++)
+        for(int x:adj[i])
+            cout<<x<<" ";
+        cout<<endl;
+
+    return 0;
+}
+
+
+Time Complexity:  O(V+E), where V = no. of vertices and E = no. of edges.
+Auxiliary Space: For avg case, it’s O(V+E). But in the worst case, 
+    it’s O(V^2) when each vertex is connected to all the other vertices.
+
+
+2) BFS First Version -> given an undirected graph and a source vertex 's' 
+    print BFS from the given source.
+
+void BFS(vector<int> adj[],int V,int s) {
+    bool visited[V];
+    for(int i=0;i<V;i++)
+        visited[i]=false;
+    queue<int> q;
+    visited[s]=true;
+    q.push(s);
+    while(q.size()) 
+    {
+        int u=q.front();
+        q.pop();
+        cout<<u<<" ";
+        for(int v:adj[u])
+            if(!visited[v]) 
+            {
+                visited[v]=true;
+                q.push(v);
+            }
+    }
+}
+
+
+3) BFS Second Version-> No Source Given and graph may be disconnected
+
+void BFS(vector<int> adj[],int s,bool visited[]) {
+    queue<int> q;
+    visited[s]=true;
+    q.push(s);
+    while(q.size())
+    {
+        int u=q.front();
+        q.pop();
+        cout<<u<<" ";
+        for(int v:adj[u])
+            if(!visited[v])
+            {
+                visited[v]=true;
+                q.push(v);
+            }
+    }
+}
+void BFSDis(vector<int> adj[], int V) {
+    bool visited[V];
+    for(int i=0;i<V;i++)
+        visited[i]=false;
+    for(int i=0;i<V;i++)
+        if(!visited[i])
+            BFS(adj,i,visited);
+}
+
+4) DFS Version1-> print DFS of a undirected connected graph starting from the given source 
+void DFS_Rec(vector<int> adj[],int s,bool visited[]) {
+    visited[s]=true;
+    cout<<s<<" ";
+    for(int u:adj[s])
+        if(!visited[u])
+            DFS_Rec(adj,u,visited);
+}
+void DFS(vector<int> adj[],int V,int s) {
+    bool visited[V];
+    for(int i=0;i<V;i++)
+        visited[i]=false;
+    DFS_Rec(adj,s,visited);
+}
+
+5) DFS Version2-> print DFS of whole undirected graph ( may be disconnected)
+
+void DFSRec(vector<int> adj[],int s, bool visited[]) {
+    visited[s]=true;
+    cout<<s<<" ";
+    for(int u:adj[s])
+        if(!visited[u])
+            DFSRec(adj,u,visited);
+}
+void DFS(vector<int> adj[],int V) {
+    bool visited[V];
+    for(int i=0;i<V;i++)
+        visited[i]=false;
+    for(int i=0;i<V;i++)
+        if(!visited[i])
+            DFSRec(adj,i,visited);
+}
+
+6) Topological Sorting (BFS Based Solution )
+// Sir only writes pseudocode/approach..
+
+7) Topological Sorting (DFS Based Solution )
+// Sir only writes pseudocode/approach..
+
+8) Prims algorithm MST L19 (not optimise and not verified) (Line 72)
+int primMST(vector<int> graph[], int V)
+{
+    int key[V], xu = 0;
+    fill(key, key + V, INT_MAX);
+    key[0] = 0;
+    bool mSet[V] = {false};
+
+    for(int count = 0; count < V; count++)
+    {
+        int u = -1;
+        for(int i = 0; i < V; i++)
+            if(!mSet[i] && (u == -1 || key[i] < key[u]))
+                u = i;
+
+        mSet[u] = true;
+        xu += key[u];
+
+        for(int v = 0; v < V; v++)
+            if(graph[u][v] != 0 && !mSet[v])
+                key[v] = min(key[v], graph[u][v]);
+    }
+    return xu;
+}
+
+
+
+*/
