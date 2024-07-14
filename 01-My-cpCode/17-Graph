@@ -1,0 +1,73 @@
+1) 1971. Find if Path Exists in Graph (for unique elements..) easy ques.
+2) 797. All Paths From Source to Target (Line 52)
+3) 
+
+
+
+
+
+1) 1971. Find if Path Exists in Graph (for unique elements..) easy ques.
+https://leetcode.com/problems/find-if-path-exists-in-graph/description/
+
+class Solution {
+public:
+    void addEdge(int u,int v,vector<vector<int>>& adj) {
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    bool BFS(vector<vector<int>>& adj,int s,int d) {
+        vector<bool> visited(adj.size(),false);
+        queue<int> q;
+        q.push(s);
+        while(q.size())
+        {
+            for(int i=0;i<adj[q.front()].size();i++)
+                if( ! visited[adj[q.front()][i]] )
+                    q.push(adj[q.front()][i]),visited[adj[q.front()][i]]=true;
+            if(q.front()==d)
+                return true;
+            q.pop();
+        }
+        return false;
+    }
+    bool validPath(int n, vector<vector<int>>& e, int s, int d) {
+        vector<vector<int>> adj(n);
+        for(int i=0;i<e.size();i++)
+            addEdge(e[i][0],e[i][1],adj);
+        /*
+        // Print Graph...
+        for(int i=0;i<adj.size();i++)
+        {
+            for(int j=0;j<adj[i].size();j++)
+                cout<<adj[i][j]<<" ";
+            cout<<endl;
+        }
+        */
+        return BFS(adj,s,d);
+    }
+};
+
+
+2) 797. All Paths From Source to Target 
+https://leetcode.com/problems/all-paths-from-source-to-target/description/
+    void fun(vector<vector<int>>& g,vector<vector<int>>& ans,vector<int> curr,int idx) {
+        curr.push_back(idx);
+        for(int i=0;i<g[idx].size();i++)
+            if(g[idx][i]==g.size()-1)
+            {
+                vector<int> temp=curr;
+                temp.push_back(g[idx][i]);
+                ans.push_back(temp);
+            }
+            else
+                fun(g,ans,curr,g[idx][i]);
+    }
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& g) {
+        vector<vector<int>> ans;
+        fun(g,ans,{},0);
+        return ans;
+    }
+
+
+
+3) 

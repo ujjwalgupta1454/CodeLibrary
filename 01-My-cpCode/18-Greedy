@@ -1,0 +1,22 @@
+LC Ques 991. Broken Calculator ( tagged Math, Greedy )
+https://leetcode.com/problems/broken-calculator/description/
+
+multiply the number on display by 2, or
+subtract 1 from the number on display.
+
+int count=0; // count= minm steps , s=start , t=target..
+int k=2; // in ques it is asked for 2 so k=2 (i have generalise problem)
+while(s!=t)
+{
+    if(t<s)
+    {
+        count+=s-t;
+        break;
+    }
+    else
+    {
+        count+=t%k,t+=t%k;
+        count++;
+        t/=k;
+    }
+}

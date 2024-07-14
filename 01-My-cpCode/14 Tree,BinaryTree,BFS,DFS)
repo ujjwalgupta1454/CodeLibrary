@@ -1,0 +1,34 @@
+1) Binary Tree Level Order Traversal (Line 10)
+
+
+
+
+
+
+
+
+1) 102. Binary Tree Level Order Traversal ( from My Leetcode )
+https://leetcode.com/problems/binary-tree-level-order-traversal/description/
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(q.size())
+        {
+            int n=q.size();
+            vector<int> temp;
+            for(int i=0;i<n;i++)
+            {
+                if(q.front())
+                {
+                    temp.push_back(q.front()->val);
+                    q.push(q.front()->left);
+                    q.push(q.front()->right);
+                }
+                q.pop();
+            }
+            if(temp.size())
+                ans.push_back(temp);
+        }
+        return ans;
+    }

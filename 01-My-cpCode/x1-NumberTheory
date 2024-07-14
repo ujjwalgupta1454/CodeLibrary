@@ -1,0 +1,71 @@
+1) function check whether a number is prime or not 
+2) upto n all prime no. in vll prime
+3) all primeFactors of n in vll pf
+
+
+
+
+
+
+
+1) function check whether a number is prime or not 
+bool isPrime(int n)
+{
+	if(n<=1) 
+	    return false; 
+	if(n==2 || n==3) 
+	    return true; 
+	if(n%2==0 || n%3==0) 
+		return false;
+	for(int i=5;i<=sqrt(n);i+=6) 
+		if(n%i==0 || n%(i+2)==0) 
+			return false;
+	return true; 
+}
+
+
+2) upto n all prime no. in vll prime
+ll SIZE=1e6;
+bool sieve[1000001];
+void createSieve(vll& prime){
+    for(int i=2;i<SIZE+1;i++)
+        sieve[i]=1;
+    for(int i=2;i*i<=SIZE;i++){
+        if(sieve[i]==1){
+            for(int j=i*i;j<=SIZE;j+=i){
+                sieve[j]=0;
+            }
+        }
+    }
+    for(int i=2;i<SIZE+1;i++)
+        if(sieve[i]==1)
+            prime.pb(i);
+}
+// in int main()
+// vll prime;
+// createSieve(prime);
+
+
+
+3) all primeFactors of n in vll pf
+void primeFactors(int n,vector<ll>& pf)
+{
+	while (n%2==0) 
+	{
+		pf.pb(2);
+		n/=2; 
+	}
+	for(int i=3;i*i<=n;i+=2)
+		while (n%i==0) 
+		{ 
+		    pf.pb(i);
+			n/=i; 
+		}
+	if(n>2) 
+	    pf.pb(n);
+} 
+// vll pf;
+// primeFactors(k,pf);
+
+
+4) 
